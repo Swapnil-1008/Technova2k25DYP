@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Graphinova Coordinator Panel</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: #f8fafc;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1200px;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin: 0 auto;
+            overflow-x: auto;
+        }
+        h2 {
+            color: #263967;
+            margin-bottom: 25px;
+            font-size: 24px;
+            text-align: center;
+        }
+        #searchBar {
+            width: 100%;
+            padding: 12px 20px;
+            margin-bottom: 25px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+        #searchBar:focus {
+            outline: none;
+            border-color: #1e40af;
+        }
+        #totalAmount {
+            font-size: 16px;
+            font-weight: 600;
+            margin: 20px 0;
+            padding: 12px;
+            background: #f1f5f9;
+            border-radius: 8px;
+            color: #1e40af;
+            text-align: center;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            min-width: 900px;
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            font-size: 14px;
+            line-height: 1.4;
+            max-width: 250px;
+            word-wrap: break-word;
+        }
+        th {
+            background: #263967;
+            color: white;
+            position: sticky;
+            top: 0;
+            font-weight: 600;
+        }
+        tr:nth-child(even) {
+            background-color: #f8fafc;
+        }
+        td {
+            border-bottom: 1px solid #e2e8f0;
+            color: #475569;
+        }
+        button {
+            padding: 8px 16px;
+            margin: 4px;
+            cursor: pointer;
+            border: none;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            min-width: 80px;
+        }
+        .confirm-btn {
+            background-color: #22c55e;
+            color: white;
+        }
+        .confirm-btn:hover {
+            background-color: #16a34a;
+        }
+        .disabled-btn {
+            background-color: #94a3b8;
+            color: white;
+            cursor: not-allowed;
+        }
+        .delete-btn {
+            background-color: #ef4444;
+            color: white;
+        }
+        .delete-btn:hover {
+            background-color: #dc2626;
+        }
+        td[data-status="Confirmed"] {
+            color: #22c55e;
+            font-weight: 500;
+        }
+        td[data-status="Pending"] {
+            color: #eab308;
+            font-weight: 500;
+        }
+        .loading-message {
+            text-align: center;
+            padding: 20px;
+            color: #64748b;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Graphinova Coordinator Panel</h2>
+        <input type="text" id="searchBar" placeholder="Search by name..." onkeyup="filterTable()">
+        <div id="totalAmount">Total Amount Credited: ₹0</div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Mobile</th>
+                    <th>College</th>
+                    <th>UTR</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="userList">
+                <tr><td colspan="7" class="loading-message">Loading registrations...</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-app.js";
+        import { getDatabase, ref, onValue, update, remove } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDRSGwSRHfuOqJ9nkhnbHT_n2Lna2_k4kA",
+            authDomain: "technova-2k25.firebaseapp.com",
+            databaseURL: "https://technova-2k25-default-rtdb.firebaseio.com",
+            projectId: "technova-2k25",
+            storageBucket: "technova-2k25.firebasestorage.app",
+            messagingSenderId: "208002521776",
+            appId: "1:208002521776:web:393109ed6c5638280a7975",
+            measurementId: "G-9WS9WC2VMV"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        const usersRef = ref(db, 'registrations/Graphinova');
+
+        let totalAmount = 0;
+        const entryFee = 100;
+
+        function updateTotalAmount(amount) {
+            totalAmount += amount;
+            document.getElementById("totalAmount").innerText = `Total Amount Credited: ₹${totalAmount}`;
+        }
+
+        onValue(usersRef, (snapshot) => {
+            const userList = document.getElementById("userList");
+            userList.innerHTML = "";
+            totalAmount = 0;
+
+            if (!snapshot.exists()) {
+                userList.innerHTML = `<tr><td colspan="7" class="loading-message">No registrations found</td></tr>`;
+                updateTotalAmount(0);
+                return;
+            }
+
+            snapshot.forEach((childSnapshot) => {
+                const userData = childSnapshot.val();
+                const mobileNumber = userData.mobile || "N/A";
+                const status = userData.paymentStatus || "Pending";
+                const utr = userData.utr || "N/A";
+
+                totalAmount += entryFee;
+
+                const row = document.createElement("tr");
+                row.classList.add("user-row");
+                row.setAttribute("data-name", userData.name.toLowerCase());
+
+                let confirmButton = `
+                    <button id="confirm-${childSnapshot.key}" class="confirm-btn" onclick="confirmPayment('${childSnapshot.key}')">Confirm</button>
+                `;
+
+                if (status === "Confirmed") {
+                    confirmButton = `<button class="disabled-btn" disabled>Confirmed</button>`;
+                }
+
+                row.innerHTML = `
+                    <td>${userData.name || "N/A"}</td>
+                    <td>${userData.email || "N/A"}</td>
+                    <td>${mobileNumber}</td>
+                    <td>${userData.college || "N/A"}</td>
+                    <td>${utr}</td>
+                    <td id="status-${childSnapshot.key}" data-status="${status}">${status}</td>
+                    <td>
+                        ${confirmButton}
+                        <button class="delete-btn" onclick="deleteEntry('${childSnapshot.key}', '${status}')">Delete</button>
+                    </td>
+                `;
+                userList.appendChild(row);
+            });
+
+            updateTotalAmount(0);
+        });
+
+        window.confirmPayment = function(userKey) {
+            const userRef = ref(db, `registrations/Graphinova/${userKey}`);
+            update(userRef, { paymentStatus: "Confirmed" }).then(() => {
+                document.getElementById(`status-${userKey}`).innerText = "Confirmed";
+                document.getElementById(`status-${userKey}`).setAttribute("data-status", "Confirmed");
+                const confirmBtn = document.getElementById(`confirm-${userKey}`);
+                if (confirmBtn) {
+                    confirmBtn.outerHTML = `<button class="disabled-btn" disabled>Confirmed</button>`;
+                }
+                alert("Payment Confirmed!");
+            }).catch(error => {
+                console.error("Error updating status:", error);
+                alert("Failed to confirm payment.");
+            });
+        };
+
+        window.deleteEntry = function(userKey, status) {
+            if (confirm("Are you sure you want to delete this entry?")) {
+                const userRef = ref(db, `registrations/Graphinova/${userKey}`);
+                remove(userRef).then(() => {
+                    updateTotalAmount(-entryFee);
+                    alert("Entry deleted successfully.");
+                }).catch(error => {
+                    console.error("Error deleting entry:", error);
+                    alert("Failed to delete entry.");
+                });
+            }
+        };
+
+        window.filterTable = function() {
+            const searchValue = document.getElementById("searchBar").value.toLowerCase();
+            document.querySelectorAll(".user-row").forEach(row => {
+                const name = row.getAttribute("data-name");
+                row.style.display = name.includes(searchValue) ? "" : "none";
+            });
+        };
+         // Disable right-click context menu
+         document.addEventListener('contextmenu', function(event) {
+            event.preventDefault();
+        });
+
+        // Disable Ctrl key
+        document.addEventListener('keydown', function(event) {
+            if (event.ctrlKey) {
+                event.preventDefault();
+                alert('Ctrl key is disabled on this page.');
+            }
+        });
+    </script>
+</body>
+</html>

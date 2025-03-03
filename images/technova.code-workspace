@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"path": "../technova"
+		},
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"liveServer.settings.multiRootWorkspaceName": "finaltechnova"
+	}
+}

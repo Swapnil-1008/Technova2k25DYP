@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cine-Quest</title>
+    <style>
+        /* General Styling */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #0A1F44, #1C2B5A);
+            color: white;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 850px;
+            margin: 50px auto;
+            background: rgba(28, 43, 90, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+            transition: 0.3s ease-in-out;
+        }
+        .container:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 25px rgba(255, 255, 255, 0.4);
+        }
+
+        /* Heading Styling */
+        h1 {
+            color: #4DB8FF;
+            font-size: 36px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+        h3 {
+            color: #F9A826;
+            font-size: 22px;
+        }
+        .entry-fee {
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 5px;
+            text-decoration: underline;
+        }
+
+        /* Information Sections */
+        .rules {
+            text-align: left;
+            margin-top: 20px;
+            padding: 0 20px;
+            font-size: 18px;
+            line-height: 1.6;
+        }
+
+        /* Contact Section */
+        .contact {
+            margin-top: 20px;
+            font-weight: bold;
+            font-size: 18px;
+            color: #F9A826;
+        }
+
+        /* Button Styling */
+        .register-btn, .home-btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 15px 30px;
+            background: #4DB8FF;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 20px;
+            font-weight: bold;
+            transition: 0.3s;
+            box-shadow: 0 5px 15px rgba(77, 184, 255, 0.4);
+        }
+        .register-btn:hover, .home-btn:hover {
+            background: #007ACC;
+            box-shadow: 0 8px 20px rgba(77, 184, 255, 0.6);
+            transform: scale(1.05);
+        }
+
+        /* Banner Styling */
+        .banner-container {
+            position: relative;
+            text-align: center;
+        }
+        .event-banner {
+            max-width: 100%;
+            width: 100%;
+            height: auto;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.3);
+        }
+
+        /* List Styling */
+        ul {
+            list-style-type: none;
+            text-align: left;
+            display: inline-block;
+            color: white;
+            font-size: 18px;
+            margin: 15px 0;
+            padding-left: 0;
+        }
+        li {
+            margin-bottom: 10px;
+            padding-left: 25px;
+            position: relative;
+        }
+        li::before {
+            content: "\1F3AC";
+            color: #4DB8FF;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+        .sub-list {
+            margin-left: 20px;
+            font-size: 16px;
+        }
+        .sub-list li::before {
+            content: "\1F4CC";
+            color: #F9A826;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="banner-container">
+            <img src="images/Img_CineQuest.png" 
+                 alt="Cine-Quest Reel Making Event" class="event-banner">
+        </div>
+        
+        <h1>Cine-Quest Reel Making Competition</h1>
+        <p class="entry-fee">💰 Entry Fee: ₹100 (Individual) | ₹200 (Team of 2)</p>
+
+        <div class="rules">
+            <h3>📜 Rules:</h3>
+            <ul>
+                <li>Each team should consist of **one or two members** only.</li>
+                <li>🎥 **Video Duration:** Video must be **1 minute long**.</li>
+                <li>🛑 Event consists of **two rounds:**</li>
+                <ul class="sub-list">
+                    <li><strong>Round 1:</strong> Present your own reel with a **tutorial**. **No presets allowed** (e.g., Filmora, VN codes).</li>
+                    <li><strong>Round 2:</strong> A **theme** will be provided **on the spot** by the judges.</li>
+                </ul>
+                <li>🚀 Only **first 50 entries** will be considered (**First-Come-First-Serve basis**).</li>
+                <li>📂 **Video must be submitted in MP4 or document format.**</li>
+                <li>⚖ Judge’s decision will be **final & binding**.</li>
+            </ul>
+        </div>
+
+        <p class="contact">📞 Contact: Manal Dhurve - 8767717118</p>
+        <a href="cine_quest_form.html" class="register-btn">Register Now</a>
+        <a href="index.html" class="home-btn">Back to Home</a>
+    </div>
+</body>
+</html>

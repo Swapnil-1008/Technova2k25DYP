@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cine Quest Coordinator Panel</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: #f8fafc;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1200px;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin: 0 auto;
+            overflow-x: auto;
+        }
+        h2 {
+            color: #263967;
+            margin-bottom: 25px;
+            font-size: 24px;
+            text-align: center;
+        }
+        #searchInput {
+            width: 100%;
+            padding: 12px 20px;
+            margin-bottom: 25px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+        #searchInput:focus {
+            outline: none;
+            border-color: #1e40af;
+        }
+        #totalAmount {
+            font-size: 16px;
+            font-weight: 600;
+            margin: 20px 0;
+            padding: 12px;
+            background: #f1f5f9;
+            border-radius: 8px;
+            color: #1e40af;
+            text-align: center;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            min-width: 900px;
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            font-size: 14px;
+            line-height: 1.4;
+            max-width: 250px;
+            word-wrap: break-word;
+        }
+        th {
+            background: #263967;
+            color: white;
+            position: sticky;
+            top: 0;
+            font-weight: 600;
+            text-align: center;
+        }
+        tr:nth-child(even) {
+            background-color: #f8fafc;
+        }
+        td {
+            border-bottom: 1px solid #e2e8f0;
+            color: #475569;
+            vertical-align: top;
+        }
+        button {
+            padding: 8px 16px;
+            margin: 4px;
+            cursor: pointer;
+            border: none;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            min-width: 80px;
+        }
+        .confirm-btn {
+            background-color: #22c55e;
+            color: white;
+        }
+        .confirm-btn:hover {
+            background-color: #16a34a;
+        }
+        .disabled-btn {
+            background-color: #94a3b8;
+            color: white;
+            cursor: not-allowed;
+        }
+        .delete-btn {
+            background-color: #ef4444;
+            color: white;
+        }
+        .delete-btn:hover {
+            background-color: #dc2626;
+        }
+        td[data-status="Confirmed"] {
+            color: #22c55e;
+            font-weight: 500;
+        }
+        td[data-status="Pending"] {
+            color: #eab308;
+            font-weight: 500;
+        }
+        .loading-message {
+            text-align: center;
+            padding: 20px;
+            color: #64748b;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Cine Quest Coordinator Panel</h2>
+        <input type="text" id="searchInput" placeholder="Search by participant name..." onkeyup="searchParticipant()">
+        <div id="totalAmount">Total Amount Credited: ₹0</div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Leader Mobile</th>
+                    <th>Participants</th>
+                    <th>Payment Status</th>
+                    <th>UTR</th>
+                    <th>Participant 1</th>
+                    <th>Participant 2</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="registrationsTableBody">
+                <tr><td colspan="7" class="loading-message">Loading registrations...</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-app.js";
+        import { getDatabase, ref, onValue, update, remove } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDRSGwSRHfuOqJ9nkhnbHT_n2Lna2_k4kA",
+            authDomain: "technova-2k25.firebaseapp.com",
+            databaseURL: "https://technova-2k25-default-rtdb.firebaseio.com",
+            projectId: "technova-2k25",
+            storageBucket: "technova-2k25.firebasestorage.app",
+            messagingSenderId: "208002521776",
+            appId: "1:208002521776:web:393109ed6c5638280a7975",
+            measurementId: "G-9WS9WC2VMV"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        const cineQuestRef = ref(db, "registrations/CineQuest");
+
+        let totalAmount = 0;
+        let allEntries = {};
+
+        function updateTotalAmount() {
+            document.getElementById("totalAmount").innerText = `Total Amount Credited: ₹${totalAmount}`;
+        }
+
+        function displayData(entries) {
+            const tableBody = document.getElementById("registrationsTableBody");
+            tableBody.innerHTML = "";
+            totalAmount = 0;
+
+            Object.keys(entries).forEach((key) => {
+                const entry = entries[key];
+                const participantCount = entry.participants || 1;
+                const entryFee = 100 * participantCount;
+                totalAmount += entryFee;
+
+                const row = document.createElement("tr");
+                const mobileNumber = key;
+
+                let confirmButton = `<button id="confirm-${key}" class="confirm-btn" onclick="confirmEntry('${key}')">Confirm</button>`;
+                if (entry.paymentStatus === "Confirmed") {
+                    confirmButton = `<button class="disabled-btn" disabled>Confirmed</button>`;
+                }
+
+                row.innerHTML = `
+                    <td>${mobileNumber}</td>
+                    <td>${participantCount}</td>
+                    <td id="status-${key}" data-status="${entry.paymentStatus}">${entry.paymentStatus}</td>
+                    <td>${entry.utr || "N/A"}</td>
+                    <td>${entry.name} (${entry.email}, ${entry.mobile})</td>
+                    <td>${entry.participant2 ? `${entry.participant2.name} (${entry.participant2.email}, ${entry.participant2.mobile})` : "-"}</td>
+                    <td>
+                        ${confirmButton}
+                        <button class="delete-btn" onclick="deleteEntry('${key}', ${entryFee})">Delete</button>
+                    </td>
+                `;
+
+                tableBody.appendChild(row);
+            });
+
+            updateTotalAmount();
+        }
+
+        onValue(cineQuestRef, (snapshot) => {
+            if (snapshot.exists()) {
+                allEntries = snapshot.val();
+                displayData(allEntries);
+            } else {
+                document.getElementById("registrationsTableBody").innerHTML = "<tr><td colspan='7' class='loading-message'>No registrations found</td></tr>";
+                totalAmount = 0;
+                updateTotalAmount();
+            }
+        });
+
+        window.confirmEntry = function(entryKey) {
+            const entryRef = ref(db, `registrations/CineQuest/${entryKey}`);
+            update(entryRef, { paymentStatus: "Confirmed" }).then(() => {
+                document.getElementById(`status-${entryKey}`).innerText = "Confirmed";
+                document.getElementById(`status-${entryKey}`).setAttribute("data-status", "Confirmed");
+                const confirmBtn = document.getElementById(`confirm-${entryKey}`);
+                if (confirmBtn) {
+                    confirmBtn.outerHTML = `<button class="disabled-btn" disabled>Confirmed</button>`;
+                }
+                alert("Entry Confirmed!");
+            }).catch(error => {
+                console.error("Error updating status:", error);
+                alert("Failed to confirm entry.");
+            });
+        };
+
+        window.deleteEntry = function(entryKey, entryFee) {
+            if (confirm("Are you sure you want to delete this entry?")) {
+                const entryRef = ref(db, `registrations/CineQuest/${entryKey}`);
+                remove(entryRef).then(() => {
+                    totalAmount -= entryFee;
+                    updateTotalAmount();
+                    alert("Entry deleted successfully.");
+                }).catch(error => {
+                    console.error("Error deleting entry:", error);
+                    alert("Failed to delete entry.");
+                });
+            }
+        };
+
+        window.searchParticipant = function() {
+            const query = document.getElementById("searchInput").value.toLowerCase();
+            const filteredEntries = Object.keys(allEntries).reduce((acc, key) => {
+                const entry = allEntries[key];
+                if (entry.name.toLowerCase().includes(query) || 
+                    (entry.participant2 && entry.participant2.name.toLowerCase().includes(query))) {
+                    acc[key] = entry;
+                }
+                return acc;
+            }, {});
+            displayData(filteredEntries);
+        };
+         // Disable right-click context menu
+         document.addEventListener('contextmenu', function(event) {
+            event.preventDefault();
+        });
+
+        // Disable Ctrl key
+        document.addEventListener('keydown', function(event) {
+            if (event.ctrlKey) {
+                event.preventDefault();
+                alert('Ctrl key is disabled on this page.');
+            }
+        });
+    </script>
+</body>
+</html>

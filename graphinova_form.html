@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TECHNOVA2K25 - Graphinova Registration</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #263967;
+            --secondary: #1e40af;
+            --background: #f8fafc;
+            --card-bg: #ffffff;
+            --text: #1e293b;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            color: var(--text);
+            min-height: 100vh;
+            display: grid;
+            place-items: center;
+            margin: 0;
+            padding: 1rem;
+        }
+
+        .marquee {
+            background: var(--primary);
+            color: white;
+            padding: 0.8rem;
+            font-size: 0.95rem;
+            margin: -2rem -2rem 2rem -2rem;
+            border-radius: 1.5rem 1.5rem 0 0;
+        }
+
+        .container {
+            background: var(--card-bg);
+            width: 100%;
+            max-width: 480px;
+            padding: 2rem;
+            border-radius: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        h2 {
+            color: var(--primary);
+            font-weight: 700;
+            margin: 1rem 0 2rem 0;
+            text-align: center;
+            font-size: 1.8rem;
+            position: relative;
+        }
+
+        h2::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 3px;
+            background: var(--primary);
+            margin: 0.5rem auto 0;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 1rem;
+            border: 1px solid #cbd5e1;
+            border-radius: 0.75rem;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+            padding-left: 3rem;
+            background-color: #f8fafc;
+        }
+
+        .material-icons.input-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary);
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(38, 57, 103, 0.1);
+        }
+
+        button {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 1rem 1.5rem;
+            border: none;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(38, 57, 103, 0.2);
+        }
+
+        .qr-container {
+            background: #f1f5f9;
+            padding: 1.5rem;
+            border-radius: 1rem;
+            margin: 1.5rem 0;
+            text-align: center;
+            border: 2px solid var(--primary);
+        }
+
+        /* Rest of original CSS preserved */
+        .qr-container img {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto;
+            display: block;
+            background: white;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            border: 1px solid #cbd5e1;
+        }
+
+        .qr-actions {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 1rem;
+            justify-content: center;
+        }
+
+        .qr-actions button {
+            width: auto;
+            padding: 0.75rem 1.25rem;
+        }
+
+        .payment-options {
+            display: none;
+            grid-template-columns: 1fr;
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+
+        .payment-options.active {
+            display: grid;
+        }
+
+        #registerBtn:disabled {
+            background: #cbd5e1;
+            cursor: not-allowed;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="marquee">
+            <marquee behavior="scroll" direction="left">
+                Dr D Y Patil Polytechnic Kolhapur presents TECHNOVA2K25 - Graphinova
+            </marquee>
+        </div>
+        
+        <h2>Graphinova Registration</h2>
+        
+        <form id="registrationForm">
+            <div class="form-group">
+                <span class="material-icons input-icon">person</span>
+                <input type="text" id="name" placeholder="Full Name">
+            </div>
+            
+            <div class="form-group">
+                <span class="material-icons input-icon">phone</span>
+                <input type="tel" id="mobile" placeholder="Mobile Number">
+            </div>
+
+            <div class="form-group">
+                <span class="material-icons input-icon">email</span>
+                <input type="email" id="email" placeholder="Email Address">
+            </div>
+
+            <div class="form-group">
+                <span class="material-icons input-icon">school</span>
+                <input type="text" id="college" placeholder="College Name">
+            </div>
+
+            <div class="form-group">
+                <span class="material-icons input-icon">group</span>
+                <select id="participants">
+                    <option value="" disabled selected>Number of Participants</option>
+                    <option value="1">1 Participant (₹100)</option>
+                </select>
+            </div>
+
+            <div class="qr-container hidden" id="qrContainer">
+                <p>Scan to pay ₹<span id="amount">100</span></p>
+                <img id="qrCode" alt="QR Code">
+                <P></P>
+                <b><i>Download the QR code above and upload it from your gallery for payment.</i></b>
+                <div class="qr-actions">
+                    <button type="button" id="downloadQR">Download QR</button>
+                    <button type="button" id="scanAndPay">Scan & Pay</button>
+                </div>
+                <div class="payment-options" id="paymentOptions">
+                    <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.nbu.paisa.user" target="_blank">
+                        <button type="button">Google Pay</button>
+                    </a>
+                    <a href="https://play.google.com/store/apps/details?id=com.phonepe.app" target="_blank">
+                        <button type="button">PhonePe</button>
+                    </a>
+                    <a href="https://play.google.com/store/apps/details?id=net.one97.paytm" target="_blank">
+                        <button type="button">Paytm</button>
+                    </a>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <span class="material-icons input-icon">receipt</span>
+                <input type="text" id="utr" placeholder="UTR Transaction ID">
+            </div>
+
+            <button type="button" id="registerBtn" disabled>Complete Registration</button>
+        </form>
+    </div>
+
+    <!-- Firebase and JavaScript code preserved exactly as original -->
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-app.js";
+      import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-database.js";
+      
+      const firebaseConfig = {
+        apiKey: "AIzaSyDRSGwSRHfuOqJ9nkhnbHT_n2Lna2_k4kA",
+        authDomain: "technova-2k25.firebaseapp.com",
+        databaseURL: "https://technova-2k25-default-rtdb.firebaseio.com",
+        projectId: "technova-2k25",
+        storageBucket: "technova-2k25.firebasestorage.app",
+        messagingSenderId: "208002521776",
+        appId: "1:208002521776:web:393109ed6c5638280a7975",
+        measurementId: "G-9WS9WC2VMV"
+      };
+      
+      const app = initializeApp(firebaseConfig);
+      const db = getDatabase(app);
+
+      document.getElementById("participants").addEventListener("change", function() {
+          const qrContainer = document.getElementById("qrContainer");
+          qrContainer.classList.remove('hidden');
+          
+          const upiId = "sarthakadulkar21-1@okicici";
+          const upiLink = `upi://pay?pa=${upiId}&pn=TECHNOVA2K25%20Graphinova&am=100&cu=INR`;
+          const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(upiLink)}`;
+
+          document.getElementById("qrCode").src = qrCodeUrl;
+      });
+
+      document.getElementById("downloadQR").addEventListener("click", function () {
+          let qrImage = document.getElementById("qrCode");
+          let canvas = document.createElement("canvas");
+          let ctx = canvas.getContext("2d");
+          let img = new Image();
+          img.crossOrigin = "anonymous";
+          img.src = qrImage.src;
+
+          img.onload = function () {
+              let padding = 50;
+              canvas.width = img.naturalWidth + 2 * padding;
+              canvas.height = img.naturalHeight + 2 * padding;
+              ctx.fillStyle = "#FFFFFF";
+              ctx.fillRect(0, 0, canvas.width, canvas.height);
+              ctx.drawImage(img, padding, padding);
+              canvas.toBlob(function (blob) {
+                  let link = document.createElement("a");
+                  link.href = URL.createObjectURL(blob);
+                  link.download = "qr_code.jpeg";
+                  document.body.appendChild(link);
+                  link.click();
+                  document.body.removeChild(link);
+              }, "image/jpeg", 1.0);
+          };
+      });
+
+      document.getElementById("scanAndPay").addEventListener("click", function() {
+          document.getElementById("paymentOptions").classList.toggle('active');
+      });
+
+      document.getElementById("utr").addEventListener("input", function() {
+          document.getElementById("registerBtn").disabled = !this.value.trim();
+      });
+
+      document.getElementById("registerBtn").addEventListener("click", function() {
+          const name = document.getElementById("name").value.trim();
+          const mobile = document.getElementById("mobile").value.trim();
+          const email = document.getElementById("email").value.trim();
+          const college = document.getElementById("college").value.trim();
+          const utr = document.getElementById("utr").value.trim();
+
+          if (name && mobile && email && college && utr) {
+              set(ref(db, `registrations/Graphinova/${mobile}`), {
+                  name, mobile, email, college, utr, 
+                  participants: 1, 
+                  paymentStatus: "Pending"
+              }).then(() => {
+                  alert("Registration Successful! Redirecting...");
+                  window.location.href = "success.html";
+              }).catch(error => {
+                  alert("Error saving data: " + error.message);
+              });
+          } else {
+              alert("Please fill all required fields");
+          }
+      });
+       // Disable right-click context menu
+       document.addEventListener('contextmenu', function(event) {
+            event.preventDefault();
+        });
+
+        // Disable Ctrl key
+        document.addEventListener('keydown', function(event) {
+            if (event.ctrlKey) {
+                event.preventDefault();
+                alert('Ctrl key is disabled on this page.');
+            }
+        });
+    </script>
+</body>
+</html>

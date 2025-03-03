@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quizomania Event</title>
+    <style>
+        /* General Styling */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(to right, #0A192F, #112D4E);
+            color: white;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            background: rgba(17, 45, 78, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+            position: relative;
+            overflow: hidden;
+            transition: 0.3s ease-in-out;
+        }
+        .container:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 25px rgba(255, 255, 255, 0.4);
+        }
+
+        /* Heading Styling */
+        h1 {
+            color: #00AEEF;
+            font-size: 34px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+        h3 {
+            color: #F9A826;
+            font-size: 22px;
+        }
+
+        /* Information Section */
+        .info {
+            text-align: left;
+            margin-top: 20px;
+            padding: 0 20px;
+            font-size: 18px;
+            line-height: 1.6;
+        }
+
+        /* Contact Section */
+        .contact {
+            margin-top: 20px;
+            font-weight: bold;
+            font-size: 18px;
+            color: #F9A826;
+        }
+
+        /* Button Styling */
+        .register-btn, .home-btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 15px 30px;
+            background: #00AEEF;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 20px;
+            font-weight: bold;
+            transition: 0.3s;
+            box-shadow: 0 5px 15px rgba(0, 174, 239, 0.4);
+        }
+        .register-btn:hover, .home-btn:hover {
+            background: #007bb5;
+            box-shadow: 0 8px 20px rgba(0, 174, 239, 0.6);
+            transform: scale(1.05);
+        }
+
+       /* Banner Styling */
+       .banner-container {
+        position: relative;
+        text-align: center;
+    }
+    .event-banner {
+        max-width: 100%;
+        width: 100%;
+        height: auto;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(255, 255, 255, 0.3);
+    }
+        /* List Styling */
+        ul {
+            list-style-type: none;
+            text-align: left;
+            display: inline-block;
+            color: white;
+            font-size: 18px;
+            margin: 15px 0;
+            padding-left: 0;
+        }
+        li {
+            margin-bottom: 10px;
+            padding-left: 25px;
+            position: relative;
+        }
+        li::before {
+            content: "\2714";
+            color: #00AEEF;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="banner-container">
+            <img src='images/Img_Quizomania.png' alt="Quizomania Banner" class="event-banner">
+        </div>
+        
+        <h1>Quizomania</h1>
+        <h3>💰 Entry Fees: ₹100/- (Team of 2)</h3>
+
+        <div class="info">
+            <h3>📝 Rules:</h3>
+            <ul>
+                <li>1st & 2nd round will be an online General Aptitude test.</li>
+                <li>Further rounds will be surprise rounds.</li>
+            </ul>
+        </div>
+
+        <p class="contact">📞 Contact: Atharva Tike - 9730226754</p>
+        
+        <div class="button-container">
+            <a href="quizomania_form.html" class="register-btn">Register Now</a>
+            <a href="index.html" class="home-btn">Back to Home</a>
+        </div>
+    </div>
+</body>
+</html>

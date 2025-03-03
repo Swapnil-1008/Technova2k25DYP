@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coordinator Login</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            width: 500px;
+            background: #ffffff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+        }
+        h1 {
+            color: #0056b3;
+            margin-bottom: 25px;
+            font-size: 26px;
+        }
+        .input-group {
+            margin: 20px 0;
+            text-align: left;
+        }
+        label {
+            font-weight: 600;
+            display: block;
+            margin-bottom: 8px;
+        }
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 18px;
+            box-sizing: border-box;
+        }
+        .login-btn {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            background: #0056b3;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 20px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background 0.3s ease;
+        }
+        .login-btn:hover {
+            background: #004494;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Coordinator Login</h1>
+        <form id="loginForm">
+            <div class="input-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" required>
+            </div>
+            <div class="input-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" required>
+            </div>
+            <button type="submit" class="login-btn">Login</button>
+        </form>
+    </div>
+
+    <script>
+        // Disable right-click context menu
+        document.addEventListener('contextmenu', function(event) {
+            event.preventDefault();
+        });
+
+        // Disable Ctrl key
+        document.addEventListener('keydown', function(event) {
+            if (event.ctrlKey) {
+                event.preventDefault();
+                alert('Ctrl key is disabled on this page.');
+            }
+        });
+
+        // Login form submission handler
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            const coordinators = {
+                'dyp@quizomania': { password: '@quizomania101', page: 'Quizomania Coordinator.html' },
+                'dyp@techrecruitment': { password: '@techRecruitment101', page: 'TechRecruitment Coordinator.html' },
+                'dyp@techfusion': { password: '@techFusion101', page: 'TechFusion Coordinator.html' },
+                'dyp@posternova': { password: '@posterNova101', page: 'PosterNova Coordinator.html' },
+                'dyp@paperinnovation': { password: '@paperInnovation101', page: 'PaperInnovation Coordinator.html' },
+                'dyp@graphinova': { password: '@graphinova101', page: 'Graphinova Coordinator.html' },
+                'dyp@cinequest': { password: '@cineQuest101', page: 'CineQuest Coordinator.html' }
+            };
+            
+            if (coordinators[username] && coordinators[username].password === password) {
+                window.location.href = coordinators[username].page;
+            } else {
+                alert('Invalid username or password');
+            }
+        });
+    </script>
+</body>
+</html>
