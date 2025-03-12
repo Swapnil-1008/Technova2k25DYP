@@ -20,13 +20,11 @@
             animation: fadeIn 2s ease-in-out;
             color: red;
         }
-        .gate {
-            width: 200px;
-            height: 200px;
-            background: url('https://i.imgur.com/JhTfoaR.png') no-repeat center;
-            background-size: cover;
-            margin: 20px auto;
-            animation: shakeGate 1s infinite alternate;
+        .thank-you {
+            font-size: 24px;
+            font-weight: bold;
+            color: #223ad2;
+            margin-top: 20px;
         }
         @keyframes fadeIn {
             from { opacity: 0; transform: scale(0.8); }
@@ -71,24 +69,10 @@
     <div class="container">
         <div class="gate"></div>
         <p class="message">🚫 Entries Are Full! 🚫</p>
-        <audio id="alertSound" src="https://www.myinstants.com/media/sounds/error.mp3" preload="auto"></audio>
-        <audio id="bgMusic" src="https://www.myinstants.com/media/sounds/tada-fanfare.mp3" preload="auto" loop></audio>
-        <button class="btn" onclick="joinWaitlist()">Join Waitlist</button>
         <button class="btn" onclick="exploreEvents()">Explore Other Events</button>
+        <p class="thank-you">Thank you for your overwhelming response! 🎉<br>We look forward to seeing you at the TECHNOVA 2K25!</p>
     </div>
-
     <script>
-        window.onload = function() {
-            document.getElementById('alertSound').play();
-            setTimeout(() => {
-                document.getElementById('bgMusic').play();
-            }, 1000);
-        };
-
-        function joinWaitlist() {
-            alert('You have been added to the waitlist!');
-        }
-
         function exploreEvents() {
             window.location.href = 'events.html'; // Change this to your events page
         }
